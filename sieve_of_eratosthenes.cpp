@@ -1,7 +1,7 @@
 #include <iostream>
-#include <boost/timer.hpp>
 #include <utility>
 #include <vector>
+#include <boost/timer/timer.hpp>
 
 using namespace std;
 
@@ -12,7 +12,7 @@ struct node{
 };
 
 vector<node> to_process;
-vector<node> primes;
+vector<int> primes;
 
 void perform_eratosthenes( int n ){
   for( int i = 2; i < n; i++ ){
@@ -32,7 +32,7 @@ void perform_eratosthenes( int n ){
 
   for( int i=0; i<to_process.size(); i++ ){
     if ( !to_process[i].found )
-      primes.push_back( to_process[i] );
+      primes.push_back( to_process[i].val );
   }
 }
 
@@ -49,7 +49,7 @@ int main(){
   perform_eratosthenes( num );
 
   for( int i=0; i<primes.size(); i++ ){
-    cout << primes[i].val << endl;
+    cout << primes[i] << endl;
   }
 
   return 0;

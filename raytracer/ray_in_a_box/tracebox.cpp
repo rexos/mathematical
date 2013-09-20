@@ -12,7 +12,7 @@ box create_box(){
   cin >> b.start.x >> b.start.y;
   cout << "Top-Right corner: " << endl;
   cin >> b.end.x >> b.end.y;
-  try{
+  /*  try{
     cout << "Ray source:" << endl;
     cin >> b.ray_source.x >> b.ray_source.y;
     if( b.ray_source.x > b.end.x or b.ray_source.x < b.start.x or b.ray_source.y > b.end.y or b.ray_source.y < b.start.y ) {
@@ -31,7 +31,7 @@ box create_box(){
     exit(0);
   }
   cout << "Box indexes: " << endl;
-  cin >> b.ix >> b.iy;
+  cin >> b.ix >> b.iy;*/
   return b;
 }
 
@@ -56,7 +56,7 @@ point tracebox( box &b ){
   else if( tmp.y < b.start.y ) {
     line l = generate_line( b.ray_source, tmp );
     reciever = calculate_intersection( bottom_edge, l );
-    b.iy += 1;
+    b.iy -= 1;
   }
   else {
     reciever = tmp;

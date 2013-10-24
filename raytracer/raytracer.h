@@ -4,7 +4,22 @@
 
 using namespace std;
 
-void raytracer( point grid_start, point grid_end, point source, point reciever, double angle, double box_width, double box_heigth, int cols, int rows );
+struct grid{
+  point grid_start;
+  point grid_end;
+  point source;
+  point reciever;
+  int rows;
+  int cols;
+  double angle;
+  double grid_width;
+  double grid_heigth;
+  double box_width;
+  double box_heigth;
+};
+
+
+double ** raytracer( grid &g );
 double get_angle( point a, point b );
 
 #endif

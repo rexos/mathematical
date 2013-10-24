@@ -23,7 +23,7 @@ bool operator<(data self, data other){
 }
 
 ostream &operator<<(ostream &os , vector<data> &x) {
-  for (vector<data>::iterator i = x.begin(); i != x.end(); ++i) { 
+  for (vector<data>::iterator i = x.begin(); i != x.end(); i++) { 
     os << i->i << "." << i->d << endl ;
   }
   return os;

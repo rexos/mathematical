@@ -2,6 +2,16 @@
 #include <iostream>
 #include <cmath>
 
+double compute_total_time(double **vel, double **len){
+  double total = 0;
+  for( int i = 0; i<20; i++ ){
+    for( int j=0; j<20; j++ ){
+      total += ( len[i][j]/vel[j][i] );
+    }
+  }
+  return total;
+}
+
 double get_angle( point a, point b ){
   return atan2((b.y-a.y),(b.x-a.x));
 }

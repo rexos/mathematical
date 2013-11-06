@@ -21,5 +21,6 @@ struct grid{
 
 double ** raytracer( grid &g );
 double get_angle( point a, point b );
+double compute_total_time(double **vel, double **len);
 
 #endif

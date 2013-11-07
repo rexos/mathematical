@@ -63,19 +63,5 @@ double ** raytracer( grid &g ){
     }
     result[prevx][prevy] = b.ray_length;
   }
-
-  double total_length = 0;
-
-  /**
-  for(int i=0; i<g.rows; i++){
-    for(int j=0; j<g.cols; j++){
-      cout << result[i][j] << "\t";
-      total_length += result[i][j];
-    }
-    cout << endl;
-  }
-  **/
-  //cout << "total length : " << total_length << endl;
-
   return result;
 }

@@ -8,7 +8,7 @@
 
 class tracer{
   grid g;
-  double **vel;
+  double *vel;
   vector< pair<double,double> > rays;
   void read_rays();
   void read_velocities();

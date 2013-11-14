@@ -13,9 +13,19 @@ using namespace std;
 int main(){
   srand (time(NULL));
   tracer t = tracer();
-  for( int i=0; i<10000; i++ ){
+  for( int i=0; i<100000; i++ ){
     t.run();
   }
+
+  for( int i=0; i<t.g.rows; i++ ){
+    for( int j=0; j<t.g.cols; j++ ){
+      t.mean_vel[i][j] = t.mean_vel[i][j] / t.counter;
+      cout << t.mean_vel[i][j] << "  ";
+    }
+    cout << endl;
+  }
+  
+
 
   return 0;
 }

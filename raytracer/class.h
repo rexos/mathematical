@@ -7,7 +7,6 @@
 
 
 class tracer{
-  grid g;
   double **vel;
   double * actual_times;
   static const int variance = 100.0;
@@ -19,6 +18,9 @@ class tracer{
   void read_actual_times();
   
 public:
+  grid g;
+  double **mean_vel;
+  int counter;
   tracer();
   void run();
 };

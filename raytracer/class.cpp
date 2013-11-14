@@ -67,13 +67,23 @@ void tracer::init_grid(){
 }
 
 tracer::tracer(){
+  counter = 0;
   // init grid
   init_grid();
   // init velocities array
-  vel = new double*[g.rows];
+  vel =  new double*[g.rows];
+  mean_vel = new double*[g.rows];
   for( int i=0; i<g.rows; i++ ){
-    vel[i] = new double[g.cols];
+    vel[i] =  new double[g.cols];
+    mean_vel[i] = new double[g.cols];
   }
+
+  for( int i=0; i<g.rows; i++ ){
+    for( int j=0; j<g.cols; j++ ){
+      mean_vel[i][j] = 0.0;
+    }
+  }
+
   // init and read actual_times array
   actual_times = new double[g.rows*g.cols];
   read_actual_times();
@@ -84,7 +94,6 @@ tracer::tracer(){
 void tracer::run(){
   // read velocities
   read_velocities();
-  ofstream out("raytime.txt");
   double *t = new double[rays.size()];
   for( int i = 0; i < rays.size(); ++i ){
     g.source.y = rays[i].first;
@@ -93,7 +102,12 @@ void tracer::run(){
     t[i] = compute_total_time(vel,raytracer(g));
   }
   if( get_likelihood(t) > ((double)rand()/RAND_MAX) ){
-    cout << "got" << endl;
+    for( int i=0; i<g.rows; i++ ){
+      for( int j=0; j<g.cols; j++ ){
+	mean_vel[i][j] = mean_vel[i][j] + (1/vel[i][j]);
+      }
+    }
+    counter ++;
   }
   
 }

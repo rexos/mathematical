@@ -4,9 +4,9 @@
 
 double compute_total_time(double **vel, double **len){
   double total = 0;
-  for( int i = 0; i<20; i++ ){
-    for( int j=0; j<20; j++ ){
-      total += ( len[i][j]/vel[j][i] );
+  for( int i = 0; i<4; i++ ){
+    for( int j=0; j<4; j++ ){
+      total += ( len[i][j]*vel[j][i] );
     }
   }
   return total;

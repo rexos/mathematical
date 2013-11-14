@@ -1,8 +1,10 @@
 #include <cblas.h>
 #include "class.h"
+#include <cstdlib>
+#include <cmath>
 
 void tracer::read_rays(){
-  ifstream rays_read("rays.txt");
+  ifstream rays_read("16rays.txt");
   while( !rays_read.eof() ){
     pair<double,double> tmp;
     rays_read >> tmp.first >> tmp.second;
@@ -11,6 +13,36 @@ void tracer::read_rays(){
   rays_read.close();
 }
 
+void tracer::read_actual_times(){
+  ifstream times_read("16raytime.txt");
+  for( int i=0; i<g.rows*g.cols; i++ ){
+    times_read >> actual_times[i];
+  }
+  times_read.close();
+}
+
+void tracer::read_velocities(){
+  for( int i=0; i<g.rows; i++ ){
+    for( int j=0; j<g.cols; j++ ){
+      double asd  = (double)rand()/RAND_MAX;
+      vel[i][j] = asd;
+    }
+  }
+}
+
+double tracer::get_likelihood( double * t ){
+  double res ;
+  double value = 0.0;
+  for( int i=0; i<g.rows*g.cols; i++ ){
+    double tmp = (t[i] - actual_times[i]);
+    value += tmp;
+  }
+  value = ( value / (2*variance) ) * (-1);
+  res = exp( value );
+  return res;
+}
+
+/*
 void tracer::read_velocities(){
   ifstream velocity_read("velocity.txt");
   for( int i=0; i<g.rows; i++ ){
@@ -20,14 +52,14 @@ void tracer::read_velocities(){
     }
   }
   velocity_read.close();
-}
-
+  }
+*/
 void tracer::init_grid(){
   g.grid_start.x = g.grid_start.y = 0;
   g.grid_end.x = g.grid_end.y = 100;
   g.grid_width = g.grid_end.x - g.grid_start.x;
   g.grid_heigth = g.grid_end.y - g.grid_start.y;
-  g.rows = g.cols = 20;
+  g.rows = g.cols = 4;
   g.box_width = g.grid_width / g.cols;
   g.box_heigth = g.grid_heigth / g.rows;
   g.source.x = g.grid_start.x;
@@ -35,51 +67,33 @@ void tracer::init_grid(){
 }
 
 tracer::tracer(){
+  // init grid
   init_grid();
   // init velocities array
-  vel = new double[g.rows*g.cols];
+  vel = new double*[g.rows];
+  for( int i=0; i<g.rows; i++ ){
+    vel[i] = new double[g.cols];
+  }
+  // init and read actual_times array
+  actual_times = new double[g.rows*g.cols];
+  read_actual_times();
   // read rays
   read_rays();
-  // read velocities
-  read_velocities();
-  //init grid
 }
 
 void tracer::run(){
+  // read velocities
+  read_velocities();
   ofstream out("raytime.txt");
-  int k = 0;
-  //3D matrix initialization
-  double ***data;
-  data = new double ** [rays.size()];
-  for( vector< pair<double,double> >::iterator i = rays.begin(); i != rays.end(); ++i ){
-    g.source.y = i->first;
-    g.reciever.y = i->second;
+  double *t = new double[rays.size()];
+  for( int i = 0; i < rays.size(); ++i ){
+    g.source.y = rays[i].first;
+    g.reciever.y = rays[i].second;
     g.angle = get_angle(g.source,g.reciever); 
-    data[k] = raytracer(g);
-    k++;
+    t[i] = compute_total_time(vel,raytracer(g));
+  }
+  if( get_likelihood(t) > ((double)rand()/RAND_MAX) ){
+    cout << "got" << endl;
   }
   
-  double *l = new double[g.rows*g.cols*rays.size()];
-  for( int x=0; x<rays.size(); x++ ){
-    for(int i=0; i<g.rows; i++){
-      for( int j = 0; j<g.cols; j++ ){
-	l[x*g.rows*g.cols + i*g.rows + j] = data[x][i][j];
-      }
-    }
-  }
-  double *t = new double[rays.size()];
-  cblas_dgemv(CblasRowMajor, CblasNoTrans, rays.size(), g.rows*g.cols, 1.0, l, g.rows*g.cols, vel, 1, 0.0, t, 1);
-  for(int i = 0; i < rays.size(); i++){
-    out << t[i] << endl;
-  }
-
-  //WORKING
-  /*
-    for( vector< pair<double,double> >::iterator i = rays.begin(); i != rays.end(); ++i ){
-    g.source.y = i->first;
-    g.reciever.y = i->second;
-    g.angle = get_angle(g.source,g.reciever); 
-    out << compute_total_time(vel,raytracer(g)) << endl;
-    }
-  */
 }

@@ -4,12 +4,18 @@
 #include <fstream>
 #include <utility>
 #include <vector>
-#include "class.h" 
+#include "class.h"
+#include <cstdlib> 
+#include <ctime>
 
 using namespace std;
 
 int main(){
+  srand (time(NULL));
   tracer t = tracer();
-  t.run();
+  for( int i=0; i<10000; i++ ){
+    t.run();
+  }
+
   return 0;
 }
